@@ -1,0 +1,75 @@
+/* ============================================
+   AURA — Themes
+   All color themes the user can apply
+   ============================================ */
+
+/* Default (Purple + White) is in variables.css */
+
+/* === ROSE GOLD === */
+.theme-rose {
+  --color-primary:       #E11D48;
+  --color-primary-light: #FB7185;
+  --color-primary-dark:  #9F1239;
+  --color-primary-soft:  #FFE4E6;
+  --color-accent:        #F59E0B;
+  --gradient-primary:    linear-gradient(135deg, #E11D48 0%, #F59E0B 100%);
+  --gradient-orb:        radial-gradient(circle, #FB7185, #E11D48, #9F1239);
+  --shadow-glow:         0 0 20px rgba(225,29,72,0.4);
+}
+
+/* === OCEAN BLUE === */
+.theme-ocean {
+  --color-primary:       #0EA5E9;
+  --color-primary-light: #38BDF8;
+  --color-primary-dark:  #0369A1;
+  --color-primary-soft:  #E0F2FE;
+  --color-accent:        #06B6D4;
+  --gradient-primary:    linear-gradient(135deg, #0EA5E9 0%, #06B6D4 100%);
+  --gradient-orb:        radial-gradient(circle, #38BDF8, #0EA5E9, #0369A1);
+  --shadow-glow:         0 0 20px rgba(14,165,233,0.4);
+}
+
+/* === EMERALD === */
+.theme-emerald {
+  --color-primary:       #10B981;
+  --color-primary-light: #34D399;
+  --color-primary-dark:  #065F46;
+  --color-primary-soft:  #D1FAE5;
+  --color-accent:        #059669;
+  --gradient-primary:    linear-gradient(135deg, #10B981 0%, #06B6D4 100%);
+  --gradient-orb:        radial-gradient(circle, #34D399, #10B981, #065F46);
+  --shadow-glow:         0 0 20px rgba(16,185,129,0.4);
+}
+
+/* === GOLD === */
+.theme-gold {
+  --color-primary:       #D97706;
+  --color-primary-light: #FBBF24;
+  --color-primary-dark:  #92400E;
+  --color-primary-soft:  #FEF3C7;
+  --color-accent:        #F59E0B;
+  --gradient-primary:    linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+  --gradient-orb:        radial-gradient(circle, #FBBF24, #D97706, #92400E);
+  --shadow-glow:         0 0 20px rgba(217,119,6,0.4);
+}
+
+/* === MIDNIGHT (full dark, deep purple) === */
+.theme-midnight {
+  --color-primary:        #A78BFA;
+  --color-primary-light:  #C4B5FD;
+  --color-primary-dark:   #7C3AED;
+  --color-primary-soft:   #2D1B69;
+  --color-bg:             #060614;
+  --color-bg-secondary:   #0F0F24;
+  --color-bg-card:        #12122A;
+  --color-bg-input:       #1E1B3A;
+  --color-text-primary:   #F0EDFF;
+  --color-text-secondary: #9090B0;
+  --color-text-muted:     #5A5A7A;
+  --color-border:         #1E1B3A;
+  --color-border-strong:  #3D2D8F;
+  --gradient-primary:     linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+  --gradient-orb:         radial-gradient(circle, #A78BFA, #7C3AED, #4C1D95);
+  --shadow-glow:          0 0 30px rgba(124,58,237,0.5);
+  --shadow-card:          0 2px 16px rgba(0,0,0,0.4);
+}
