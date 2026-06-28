@@ -30,6 +30,9 @@
     AuraGyro.init();
     AuraAttention.init();
     AuraAI.init();
+    AuraSplash.init();
+    AuraPWA.init();
+    AuraPeek.init();
 
     // ── 5. BOTTOM NAV ──
     document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
@@ -93,18 +96,16 @@
     // ── 11. PÁGINA INICIAL ──
     AuraRouter.navigate('home');
 
-    // ── 12. SPLASH → APP ──
+    // ── 12. SPLASH → AUTH ──
+    // AuraAuth decide si muestra app o pantalla de login
     setTimeout(() => {
       const splash = document.getElementById('splash-screen');
-      const app    = document.getElementById('app');
       if (splash) {
         splash.style.transition = 'opacity .4s ease';
         splash.style.opacity = '0';
         setTimeout(() => {
           splash.style.display = 'none';
-          if (app) app.classList.remove('hidden');
-          // Auth después de mostrar la app
-          AuraAuth.init();
+          AuraAuth.init(); // ← Auth decide qué mostrar
         }, 400);
       }
     }, 2000);
@@ -138,66 +139,6 @@
     // ── 15. ONLINE / OFFLINE ──
     window.addEventListener('offline', () => AuraToast.show('Sin conexión 📡', 'warning'));
     window.addEventListener('online',  () => AuraToast.show('Conectado ✦', 'success'));
-
-    // ── 16. PWA INSTALAR ──
-    let _installPrompt = null;
-    window.addEventListener('beforeinstallprompt', e => {
-      e.preventDefault();
-      _installPrompt = e;
-      setTimeout(() => {
-        const banner = document.getElementById('install-banner');
-        if (banner) banner.classList.remove('hidden');
-      }, 8000);
-    });
-    document.getElementById('install-btn')?.addEventListener('click', () => {
-      _installPrompt?.prompt();
-      _installPrompt?.userChoice.then(() => {
-        document.getElementById('install-banner')?.classList.add('hidden');
-      });
-    });
-    document.getElementById('install-close')?.addEventListener('click', () => {
-      document.getElementById('install-banner')?.classList.add('hidden');
-    });
-
-    // ── 17. PREVISUALIZACIÓN LARGA PRESIÓN (peek) ──
-    let peekEl = null, peekTimer = null;
-    document.addEventListener('touchstart', e => {
-      const target = e.target.closest('[data-peek]');
-      if (!target) return;
-      peekTimer = setTimeout(() => {
-        try {
-          const data = JSON.parse(target.dataset.peek);
-          _showPeek(data, e.touches[0].clientX, e.touches[0].clientY);
-        } catch(err) {}
-      }, 450);
-    }, { passive: true });
-    document.addEventListener('touchend',  _hidePeek, { passive: true });
-    document.addEventListener('touchmove', _hidePeek, { passive: true });
-
-    function _showPeek(data, x, y) {
-      _hidePeek();
-      navigator.vibrate?.(30);
-      peekEl = document.createElement('div');
-      peekEl.className = 'peek-preview';
-      peekEl.innerHTML = `
-        ${data.img   ? `<img src="${data.img}" alt="">` : ''}
-        ${data.video ? `<video src="${data.video}" autoplay muted loop></video>` : ''}
-        <div class="peek-preview__body">
-          <div class="peek-preview__title">${data.title || ''}</div>
-          <div class="peek-preview__sub">${data.sub || ''}</div>
-        </div>`;
-      const vw = window.innerWidth, pw = 260;
-      let left = Math.max(8, Math.min(vw - pw - 8, x - pw / 2));
-      let top  = y - 320;
-      if (top < 70) top = y + 20;
-      peekEl.style.cssText = `left:${left}px;top:${top}px;width:${pw}px;`;
-      document.body.appendChild(peekEl);
-    }
-
-    function _hidePeek() {
-      clearTimeout(peekTimer); peekTimer = null;
-      if (peekEl) { peekEl.remove(); peekEl = null; }
-    }
 
   }
 
