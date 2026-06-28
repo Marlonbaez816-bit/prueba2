@@ -1,18 +1,14 @@
 /* ============================================
    AURA — supabase.js
-   Conexión real con Supabase
-   Pon este archivo en js/modules/supabase.js
    ============================================ */
 
-const SUPABASE_URL  = 'https://akkotzmreadksrcuykhs.supabase.co';
-const SUPABASE_KEY  = 'sb_publisible_1era0nuspNKNZp0BaXle0w_BRo5ock1';
+const SUPABASE_URL = 'https://akkotzmreadksrcuykhs.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFra290em1yZWFka3NyY3V5a2hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MjgyODQsImV4cCI6MjA5ODIwNDI4NH0.dO7MS9CbiSTOYDkvd9ossFCEMHVKb5qldK2SO-K3gqo';
 
-/* Carga el SDK de Supabase desde CDN */
 window.AuraDB = (() => {
   let client = null;
 
   async function init() {
-    // Cargar SDK si no está cargado
     if (!window.supabase) {
       await _loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js');
     }
@@ -64,7 +60,6 @@ window.AuraDB = (() => {
   async function likeEco(ecoId) {
     const { error } = await client.rpc('incrementar_likes', { eco_id: ecoId });
     if (error) {
-      // Fallback manual si no existe la función RPC
       const { data } = await client.from('ecos').select('likes').eq('id', ecoId).single();
       await client.from('ecos').update({ likes: (data?.likes || 0) + 1 }).eq('id', ecoId);
     }
@@ -84,7 +79,8 @@ window.AuraDB = (() => {
 
   async function getSeguidores(userId) {
     const { data, error } = await client
-      .from('red_amistad').select('seguidor_id, usuarios!seguidor_id(nombre, handle, avatar_url)')
+      .from('red_amistad')
+      .select('seguidor_id, usuarios!seguidor_id(nombre, handle, avatar_url)')
       .eq('seguido_id', userId);
     if (error) throw error;
     return data;
