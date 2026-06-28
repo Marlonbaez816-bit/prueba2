@@ -26,6 +26,9 @@
     AuraGyro.init();
     AuraAttention.init();
     AuraAI.init();
+    AuraSplash.init();
+    AuraPWA.init();
+    AuraPeek.init();
 
     // ── 4. BOTTOM NAV ──
     document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
@@ -34,7 +37,7 @@
       });
     });
 
-    // ── 5. BOTÓN CREAR (ahora usa AuraCreate) ──
+    // ── 5. BOTÓN CREAR ──
     document.querySelector('[data-action="create"]')?.addEventListener('click', () => {
       AuraModal.show({
         title: 'Crear Eco',
@@ -94,20 +97,19 @@
         setTimeout(() => {
           splash.style.display = 'none';
           if (app) app.classList.remove('hidden');
-          // Auth check después de mostrar app
           AuraAuth.init();
         }, 400);
       }
     }, 2000);
 
-    // ── 11. VIBRACIÓN EN NAVEGACIÓN (haptic feedback) ──
+    // ── 11. VIBRACIÓN EN NAVEGACIÓN ──
     document.querySelectorAll('.nav-item, .btn, .icon-btn').forEach(el => {
       el.addEventListener('click', () => {
         if (navigator.vibrate) navigator.vibrate(8);
       });
     });
 
-    // ── 12. SWIPE HORIZONTAL ENTRE PÁGINAS PRINCIPALES ──
+    // ── 12. SWIPE HORIZONTAL ENTRE PÁGINAS ──
     const pages = ['home', 'ecos', 'communities', 'profile'];
     let swipeStartX = 0;
     const main = document.getElementById('main-content');
@@ -117,7 +119,6 @@
       }, { passive: true });
       main.addEventListener('touchend', e => {
         const dx = e.changedTouches[0].clientX - swipeStartX;
-        // Solo swipe horizontal fuerte y en páginas principales
         if (Math.abs(dx) < 80) return;
         const current = AuraRouter.current();
         const idx = pages.indexOf(current);
@@ -127,18 +128,7 @@
       }, { passive: true });
     }
 
-    // ── 13. INSTALAR PWA ──
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', e => {
-      e.preventDefault();
-      deferredPrompt = e;
-      // Mostrar toast de instalación después de 10s
-      setTimeout(() => {
-        AuraToast.show('📲 Instala Aura como app');
-      }, 10000);
-    });
-
-    // ── 14. ONLINE / OFFLINE ──
+    // ── 13. ONLINE / OFFLINE ──
     window.addEventListener('offline', () => AuraToast.show('Sin conexión 📡', 'warning'));
     window.addEventListener('online',  () => AuraToast.show('Conectado ✦', 'success'));
 
