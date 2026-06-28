@@ -1,5 +1,8 @@
 /* ============================================
-   AURA — ai-assistant.js v3
+   AURA — ai-assistant.js v4
+   - Inicialización DIFERIDA: espera a que todos
+     los módulos (AuraStore, AuraRouter, etc.)
+     estén listos antes de arrancar
    - Arrastrable SIN bloqueos
    - Toque corto = activar/desactivar escucha
    - Toque largo = mover
@@ -17,12 +20,37 @@ window.AuraAI = (() => {
 
   let recognition = null;
   let isListening = false;
-  let isEnabled   = AuraStore.load('ai_enabled', true);
 
-  // Modos de respuesta: 'voice' | 'toast' | 'both'
-  let responseMode = AuraStore.load('ai_response_mode', 'both');
+  // appReady = true solo cuando todos los módulos están cargados
+  let appReady = false;
+
+  // Estos valores se leen de AuraStore UNA VEZ que esté listo
+  let isEnabled    = true;
+  let responseMode = 'both'; // valores por defecto seguros
 
   const synth = window.speechSynthesis;
+
+  // ══════════════════════════════════════════
+  //  ESPERAR MÓDULOS
+  // ══════════════════════════════════════════
+  function waitForModules() {
+    return new Promise(resolve => {
+      const check = () => {
+        if (
+          window.AuraStore  &&
+          window.AuraRouter &&
+          window.AuraModal  &&
+          window.AuraToast  &&
+          window.AuraAuth
+        ) {
+          resolve();
+        } else {
+          setTimeout(check, 100);
+        }
+      };
+      check();
+    });
+  }
 
   // ══════════════════════════════════════════
   //  COMANDOS
@@ -121,6 +149,8 @@ window.AuraAI = (() => {
   //  RESPONDER
   // ══════════════════════════════════════════
   function reply(text, isError = false) {
+    // Guardia: no hacer nada si los módulos no están listos
+    if (!appReady) return;
     if (responseMode === 'voice' || responseMode === 'both') speak(text);
     if (responseMode === 'toast'  || responseMode === 'both') {
       AuraToast.show(`🤖 ${text}`, isError ? 'error' : 'default');
@@ -140,10 +170,13 @@ window.AuraAI = (() => {
 
   function setResponseMode(mode) {
     responseMode = mode;
-    AuraStore.persist('ai_response_mode', mode);
+    // Solo persistir si AuraStore está listo
+    if (window.AuraStore) AuraStore.persist('ai_response_mode', mode);
   }
 
   function nav(page) {
+    // Guardia: no navegar si los módulos no están listos
+    if (!appReady) return;
     AuraModal.close();
     setTimeout(() => AuraRouter.navigate(page), 150);
   }
@@ -163,7 +196,7 @@ window.AuraAI = (() => {
     r.onstart = () => {
       isListening = true;
       btn.classList.add('listening');
-      AuraToast.show('🎙️ Escuchando...');
+      if (appReady) AuraToast.show('🎙️ Escuchando...');
       navigator.vibrate?.(50);
     };
     r.onend = () => {
@@ -176,22 +209,22 @@ window.AuraAI = (() => {
       if (e.error === 'not-allowed') {
         reply('Activa el micrófono en tu navegador', true);
       } else if (e.error === 'no-speech') {
-        AuraToast.show('No te escuché 🎙️', 'warning');
+        if (appReady) AuraToast.show('No te escuché 🎙️', 'warning');
       }
     };
     r.onresult = (e) => {
-      // Revisar todas las alternativas
       const transcripts = [];
       for (let i = 0; i < e.results[0].length; i++) {
         transcripts.push(e.results[0][i].transcript.toLowerCase().trim());
       }
-      AuraToast.show(`🎙️ "${transcripts[0]}"`);
+      if (appReady) AuraToast.show(`🎙️ "${transcripts[0]}"`);
       processCommand(transcripts);
     };
     return r;
   }
 
   function processCommand(transcripts) {
+    if (!appReady) return; // no procesar comandos si no está listo
     for (const cmd of commands) {
       for (const transcript of transcripts) {
         if (cmd.match.some(kw => transcript.includes(kw))) {
@@ -206,6 +239,7 @@ window.AuraAI = (() => {
 
   function toggleListen() {
     if (!isEnabled) return;
+    if (!appReady) return; // no escuchar si no está listo
 
     if (isListening) {
       recognition?.stop();
@@ -237,7 +271,6 @@ window.AuraAI = (() => {
       btnX = r.left; btnY = r.top;
       dragMoved = false; isInDragMode = false;
 
-      // Toque largo (400ms) = modo arrastrar
       longPressTimer = setTimeout(() => {
         isInDragMode = true;
         navigator.vibrate?.(60);
@@ -265,7 +298,6 @@ window.AuraAI = (() => {
       longPressTimer = null;
       btn.querySelector('.aura-ai__orb').style.transform = '';
       if (!dragMoved && !isInDragMode) {
-        // Toque corto = activar/desactivar escucha
         toggleListen();
       }
       isInDragMode = false;
@@ -318,14 +350,14 @@ window.AuraAI = (() => {
     btn.style.top    = y + 'px';
     btn.style.right  = 'auto';
     btn.style.bottom = 'auto';
-    // Guardar posición
-    AuraStore.persist('ai_pos', { x, y });
+    if (window.AuraStore) AuraStore.persist('ai_pos', { x, y });
   }
 
   // ══════════════════════════════════════════
   //  MENÚ MANUAL
   // ══════════════════════════════════════════
   function openManualMenu() {
+    if (!appReady) return;
     AuraModal.show({
       title: '✦ Asistente Aura',
       content: `
@@ -335,18 +367,18 @@ window.AuraAI = (() => {
           </p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             ${[
-              ['🏠','Inicio',       "nav('home')"],
-              ['🎬','Ecos',         "nav('ecos')"],
-              ['💬','Mensajes',     "nav('chat')"],
-              ['🌐','Mi Red',       "nav('communities')"],
-              ['👤','Perfil',       "nav('profile')"],
-              ['✦', 'Aura Score',  "nav('karma')"],
-              ['🔍','Buscar',       "nav('search')"],
-              ['🖼️','Galería',      "nav('media')"],
+              ['🏠','Inicio',        "nav('home')"],
+              ['🎬','Ecos',          "nav('ecos')"],
+              ['💬','Mensajes',      "nav('chat')"],
+              ['🌐','Mi Red',        "nav('communities')"],
+              ['👤','Perfil',        "nav('profile')"],
+              ['✦', 'Aura Score',   "nav('karma')"],
+              ['🔍','Buscar',        "nav('search')"],
+              ['🖼️','Galería',       "nav('media')"],
               ['🔔','Notificaciones',"nav('notifications')"],
-              ['🎨','Temas',        "AuraModal.close();AuraModal.show({title:'Elige tu tema',content:AuraTheme.renderPicker()})"],
-              ['✏️','Crear Eco',    "AuraModal.close();setTimeout(()=>AuraCreate?.open('text'),180)"],
-              ['⚙️','Asistente',   "AuraModal.close();setTimeout(()=>AuraAI.openSettings(),180)"],
+              ['🎨','Temas',         "AuraModal.close();AuraModal.show({title:'Elige tu tema',content:AuraTheme.renderPicker()})"],
+              ['✏️','Crear Eco',     "AuraModal.close();setTimeout(()=>AuraCreate?.open('text'),180)"],
+              ['⚙️','Asistente',    "AuraModal.close();setTimeout(()=>AuraAI.openSettings(),180)"],
             ].map(([icon,label,action]) => `
               <button onclick="AuraModal.close();setTimeout(()=>{${action}},150)"
                 style="display:flex;flex-direction:column;align-items:center;gap:6px;
@@ -370,6 +402,7 @@ window.AuraAI = (() => {
   //  AJUSTES DEL ASISTENTE
   // ══════════════════════════════════════════
   function openSettings() {
+    if (!appReady) return;
     const modeLabel = { voice:'Solo voz 🔊', toast:'Solo texto 💬', both:'Voz y texto ✦' };
     AuraModal.show({
       title: '⚙️ Asistente Aura',
@@ -428,25 +461,24 @@ window.AuraAI = (() => {
   // ══════════════════════════════════════════
   function enable() {
     isEnabled = true;
-    AuraStore.persist('ai_enabled', true);
-    if (btn) btn.style.display = 'block';
-    AuraToast.show('Asistente Aura activado ✦', 'success');
+    if (window.AuraStore) AuraStore.persist('ai_enabled', true);
+    if (btn) btn.style.opacity = '1';
+    if (appReady) AuraToast.show('Asistente Aura activado ✦', 'success');
   }
 
   function disable() {
     if (isListening) recognition?.stop();
     isEnabled = false;
-    AuraStore.persist('ai_enabled', false);
+    if (window.AuraStore) AuraStore.persist('ai_enabled', false);
     if (btn) btn.style.opacity = '0.35';
     reply('Asistente desactivado. Toca el botón para reactivarlo.');
   }
 
   function toggleEnabled() {
     isEnabled ? disable() : enable();
-    // Actualizar toggle visual
     const t = document.getElementById('ai-toggle');
     if (t) t.classList.toggle('on', isEnabled);
-    const sub = document.querySelector('#ai-toggle')?.closest('.settings-row')?.querySelector('.settings-row__subtitle');
+    const sub = document.getElementById('ai-toggle')?.closest('.settings-row')?.querySelector('.settings-row__subtitle');
     if (sub) sub.textContent = isEnabled ? 'Activado — toca para desactivar' : 'Desactivado — toca para activar';
   }
 
@@ -454,46 +486,6 @@ window.AuraAI = (() => {
     const modes = ['both', 'voice', 'toast'];
     const idx = modes.indexOf(responseMode);
     responseMode = modes[(idx + 1) % modes.length];
-    AuraStore.persist('ai_response_mode', responseMode);
+    if (window.AuraStore) AuraStore.persist('ai_response_mode', responseMode);
     const modeLabel = { voice:'Solo voz 🔊', toast:'Solo texto 💬', both:'Voz y texto ✦' };
-    const el = document.getElementById('mode-label');
-    if (el) el.textContent = modeLabel[responseMode];
-    reply(`Modo: ${modeLabel[responseMode]}`);
-  }
-
-  // ══════════════════════════════════════════
-  //  INIT
-  // ══════════════════════════════════════════
-  function init() {
-    btn = document.getElementById('aura-ai-btn');
-    if (!btn) return;
-
-    // Restaurar posición guardada
-    const savedPos = AuraStore.load('ai_pos', null);
-    if (savedPos) {
-      btn.style.left = savedPos.x + 'px';
-      btn.style.top  = savedPos.y + 'px';
-      btn.style.right = 'auto';
-      btn.style.bottom = 'auto';
-    }
-
-    // Estado inicial
-    if (!isEnabled) btn.style.opacity = '0.35';
-
-    initDrag();
-
-    // Precargar voces
-    synth?.getVoices();
-    window.speechSynthesis?.addEventListener('voiceschanged', () => {});
-  }
-
-  function startVoice() {
-    AuraModal.close();
-    setTimeout(toggleListen, 300);
-  }
-
-  return {
-    init, startVoice, reply, speak,
-    toggleListen, openManualMenu, openSettings,
-    enable, disable, toggleEnabled, cycleResponseMode,
-    setResponseMode, processCommand,
+    const el = document.get
