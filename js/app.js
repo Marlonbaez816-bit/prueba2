@@ -1,37 +1,40 @@
 /* ============================================
-   AURA — app.js
-   Punto de entrada principal
-   Inicializa todos los módulos en orden
+   AURA — app.js ACTUALIZADO
+   Conecta todos los módulos nuevos
    ============================================ */
 
 (function () {
   'use strict';
 
   function bootAura() {
-    // 1. Tema
+
+    // ── 1. TEMA ──
     AuraTheme.init();
 
-    // 2. Registrar páginas en el router
+    // ── 2. REGISTRAR PÁGINAS ──
     AuraFeed.init();
     AuraEcos.init();
     AuraChat.init();
     AuraCommunities.init();
     AuraProfile.init();
     AuraKarma.init();
+    AuraNotifications.init();
+    AuraMedia.init();
+    AuraSearch.init();
 
-    // 3. Módulos de hardware / UX
+    // ── 3. MÓDULOS DE HARDWARE / UX ──
     AuraGyro.init();
     AuraAttention.init();
     AuraAI.init();
 
-    // 4. Navegación bottom bar
+    // ── 4. BOTTOM NAV ──
     document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
       btn.addEventListener('click', () => {
         AuraRouter.navigate(btn.dataset.page);
       });
     });
 
-    // 5. Botón crear
+    // ── 5. BOTÓN CREAR (ahora usa AuraCreate) ──
     document.querySelector('[data-action="create"]')?.addEventListener('click', () => {
       AuraModal.show({
         title: 'Crear Eco',
@@ -39,20 +42,20 @@
           <div style="display:flex;flex-direction:column;gap:14px;">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
               ${[
-                ['📝', 'Texto', 'Comparte tus pensamientos'],
-                ['📷', 'Foto', 'Comparte una imagen'],
-                ['🎬', 'Video Eco', 'Graba un Eco de video'],
-                ['🎵', 'Audio', 'Eco de voz o música'],
-                ['🧵', 'Hilo', 'Crea un hilo de Ecos'],
-                ['📊', 'Encuesta', 'Pregunta a tu red'],
-              ].map(([icon, label, sub]) => `
-                <button onclick="AuraToast.show('${label} próximamente', 'warning');AuraModal.close();"
+                ['📝','Texto',  'text'],
+                ['📷','Foto',   'photo'],
+                ['🎬','Video Eco','video'],
+                ['🎵','Audio',  'audio'],
+                ['🧵','Hilo',   'thread'],
+                ['📊','Encuesta','poll'],
+              ].map(([icon, label, type]) => `
+                <button onclick="AuraModal.close();setTimeout(()=>AuraCreate.open('${type}'),180);"
                   style="display:flex;flex-direction:column;align-items:center;gap:6px;
-                  background:var(--color-bg-input);border-radius:12px;padding:16px 8px;cursor:pointer;
-                  border:1px solid var(--color-border);transition:background .15s;">
+                  background:var(--color-bg-input);border-radius:14px;padding:16px 8px;cursor:pointer;
+                  border:1px solid var(--color-border);transition:background .12s;
+                  font-size:13px;font-weight:600;color:var(--color-text-primary);">
                   <span style="font-size:28px;">${icon}</span>
-                  <span style="font-size:14px;font-weight:600;">${label}</span>
-                  <span style="font-size:11px;color:var(--color-text-muted);text-align:center;">${sub}</span>
+                  ${label}
                 </button>
               `).join('')}
             </div>
@@ -61,88 +64,91 @@
       });
     });
 
-    // 6. Botón notificaciones
+    // ── 6. BOTÓN NOTIFICACIONES ──
     document.getElementById('btn-notifications')?.addEventListener('click', () => {
-      AuraModal.show({
-        title: 'Notificaciones',
-        content: `
-          <div style="display:flex;flex-direction:column;gap:2px;">
-            ${[
-              { icon: '❤️', text: '<b>Luna García</b> le dio like a tu Eco', time: 'hace 2m' },
-              { icon: '✦', text: '<b>Mateo</b> te siguió · +1 Aura', time: 'hace 15m' },
-              { icon: '💬', text: '<b>Sofía</b> comentó tu hilo', time: 'hace 1h' },
-              { icon: '🔁', text: '<b>Carlos</b> compartió tu Eco', time: 'hace 3h' },
-            ].map(n => `
-              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;
-                border-bottom:1px solid var(--color-border);">
-                <span style="font-size:20px;">${n.icon}</span>
-                <div style="flex:1;font-size:14px;">${n.text}</div>
-                <div style="font-size:11px;color:var(--color-text-muted);white-space:nowrap;">${n.time}</div>
-              </div>
-            `).join('')}
-          </div>
-        `
-      });
+      AuraRouter.navigate('notifications');
       const badge = document.getElementById('notif-badge');
       if (badge) badge.style.display = 'none';
     });
 
-    // 7. Botón buscar
+    // ── 7. BOTÓN BUSCAR ──
     document.getElementById('btn-search')?.addEventListener('click', () => {
-      AuraModal.show({
-        title: 'Buscar en Aura',
-        content: `
-          <div style="display:flex;flex-direction:column;gap:16px;">
-            <input class="input-field input-field--search" placeholder="Buscar Ecos, personas, SubAuras..."
-              autofocus oninput="AuraSearch.query(this.value)">
-            <div id="search-results">
-              <div style="font-size:13px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px;">TENDENCIAS</div>
-              ${['#AuraApp','#EcosVirales','#SubAura','#RedesDelFuturo'].map(t => `
-                <div style="padding:10px 0;border-bottom:1px solid var(--color-border);
-                  font-size:15px;cursor:pointer;color:var(--color-primary);" 
-                  onclick="AuraToast.show('Buscando ${t}...')">
-                  ${t}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `
-      });
+      AuraRouter.navigate('search');
     });
 
-    // 8. Navegar a home
+    // ── 8. BOTÓN LOGO → HOME ──
+    document.getElementById('btn-logo')?.addEventListener('click', () => {
+      AuraRouter.navigate('home');
+    });
+
+    // ── 9. PÁGINA INICIAL ──
     AuraRouter.navigate('home');
 
-    // 9. Splash → app
+    // ── 10. SPLASH → APP ──
     setTimeout(() => {
       const splash = document.getElementById('splash-screen');
       const app    = document.getElementById('app');
-      if (splash) splash.classList.add('fade-out');
+      if (splash) {
+        splash.style.transition = 'opacity .4s ease';
+        splash.style.opacity = '0';
+        setTimeout(() => {
+          splash.style.display = 'none';
+          if (app) app.classList.remove('hidden');
+          // Auth check después de mostrar app
+          AuraAuth.init();
+        }, 400);
+      }
+    }, 2000);
+
+    // ── 11. VIBRACIÓN EN NAVEGACIÓN (haptic feedback) ──
+    document.querySelectorAll('.nav-item, .btn, .icon-btn').forEach(el => {
+      el.addEventListener('click', () => {
+        if (navigator.vibrate) navigator.vibrate(8);
+      });
+    });
+
+    // ── 12. SWIPE HORIZONTAL ENTRE PÁGINAS PRINCIPALES ──
+    const pages = ['home', 'ecos', 'communities', 'profile'];
+    let swipeStartX = 0;
+    const main = document.getElementById('main-content');
+    if (main) {
+      main.addEventListener('touchstart', e => {
+        swipeStartX = e.touches[0].clientX;
+      }, { passive: true });
+      main.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - swipeStartX;
+        // Solo swipe horizontal fuerte y en páginas principales
+        if (Math.abs(dx) < 80) return;
+        const current = AuraRouter.current();
+        const idx = pages.indexOf(current);
+        if (idx === -1) return;
+        if (dx < 0 && idx < pages.length - 1) AuraRouter.navigate(pages[idx + 1]);
+        if (dx > 0 && idx > 0) AuraRouter.navigate(pages[idx - 1]);
+      }, { passive: true });
+    }
+
+    // ── 13. INSTALAR PWA ──
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Mostrar toast de instalación después de 10s
       setTimeout(() => {
-        if (splash) splash.style.display = 'none';
-        if (app) app.classList.remove('hidden');
-        // Auth check
-        AuraAuth.init();
-      }, 400);
-    }, 1600);
+        AuraToast.show('📲 Instala Aura como app');
+      }, 10000);
+    });
+
+    // ── 14. ONLINE / OFFLINE ──
+    window.addEventListener('offline', () => AuraToast.show('Sin conexión 📡', 'warning'));
+    window.addEventListener('online',  () => AuraToast.show('Conectado ✦', 'success'));
+
   }
 
-  // Esperar DOM
+  // ── ESPERAR DOM ──
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bootAura);
   } else {
     bootAura();
   }
-
-  // Búsqueda simple (stub)
-  window.AuraSearch = {
-    query(term) {
-      const el = document.getElementById('search-results');
-      if (!el || !term) return;
-      el.innerHTML = `<div style="font-size:14px;color:var(--color-text-muted);text-align:center;padding:20px;">
-        Buscando "${term}"... (próximamente conectado a base de datos)
-      </div>`;
-    }
-  };
 
 })();
