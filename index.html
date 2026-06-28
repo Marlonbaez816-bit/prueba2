@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#7C3AED" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Aura — Tu espacio, tu aura" />
   <title>Aura</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="css/variables.css" />
@@ -17,7 +18,9 @@
   <link rel="stylesheet" href="css/themes.css" />
 
   <style>
-    /* ── SPLASH ── */
+    /* ══════════════════════════════════════════
+       SPLASH
+    ══════════════════════════════════════════ */
     .splash {
       position: fixed; inset: 0; z-index: 999;
       background: #08081a;
@@ -28,20 +31,23 @@
     .splash__bg {
       position: absolute; inset: -40%;
       background:
-        radial-gradient(circle at 25% 45%, rgba(124,58,237,.22) 0%, transparent 55%),
-        radial-gradient(circle at 75% 25%, rgba(236,72,153,.14) 0%, transparent 45%),
-        radial-gradient(circle at 55% 80%, rgba(167,139,250,.12) 0%, transparent 45%);
+        radial-gradient(circle at 25% 45%, rgba(124,58,237,.25) 0%, transparent 55%),
+        radial-gradient(circle at 75% 25%, rgba(236,72,153,.16) 0%, transparent 45%),
+        radial-gradient(circle at 55% 80%, rgba(167,139,250,.14) 0%, transparent 45%);
       animation: bgDrift 9s ease-in-out infinite alternate;
     }
-    .splash__orb-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
+    .splash__orb-wrap {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
     .splash__ring {
       position: absolute; border-radius: 50%;
       border: 1.5px solid rgba(167,139,250,.35);
       animation: ringOut 2.2s ease-out infinite;
     }
-    .splash__ring:nth-child(1){ width:80px;  height:80px;  animation-delay:0s; }
-    .splash__ring:nth-child(2){ width:80px;  height:80px;  animation-delay:.6s; }
-    .splash__ring:nth-child(3){ width:80px;  height:80px;  animation-delay:1.2s; }
+    .splash__ring:nth-child(1){ width:80px; height:80px; animation-delay:0s; }
+    .splash__ring:nth-child(2){ width:80px; height:80px; animation-delay:.6s; }
+    .splash__ring:nth-child(3){ width:80px; height:80px; animation-delay:1.2s; }
     .splash__orb {
       width: 72px; height: 72px; border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, #c4b5fd, #7c3aed, #4c1d95);
@@ -65,282 +71,376 @@
       animation: wordPop .7s cubic-bezier(.34,1.56,.64,1) .55s both;
     }
     .splash__bar-wrap {
-      width: 110px; height: 2px; background: rgba(167,139,250,.18);
+      width: 110px; height: 2px;
+      background: rgba(167,139,250,.18);
       border-radius: 99px; overflow: hidden;
       animation: fadeIn .4s ease .9s both;
     }
     .splash__bar {
       height: 100%; width: 0; border-radius: 99px;
       background: linear-gradient(90deg,#7c3aed,#ec4899);
-      animation: barFill 1.3s cubic-bezier(.4,0,.2,1) 1s forwards;
+      animation: barFill 1.6s cubic-bezier(.4,0,.2,1) 1s forwards;
+    }
+    .splash__version {
+      position: absolute; bottom: 24px;
+      font-size: 11px; color: rgba(167,139,250,.3);
+      letter-spacing: 1px;
+      animation: fadeIn .5s ease 1.5s both;
     }
 
-    /* ── APP SHELL ── */
-    .app { position:relative; max-width:480px; margin:0 auto; min-height:100dvh; display:flex; flex-direction:column; background:var(--color-bg); }
+    /* ══════════════════════════════════════════
+       APP SHELL
+    ══════════════════════════════════════════ */
+    .app {
+      position: relative;
+      max-width: 480px; margin: 0 auto;
+      min-height: 100dvh;
+      display: flex; flex-direction: column;
+      background: var(--color-bg);
+    }
 
-    /* ── TOP BAR ── */
+    /* ══════════════════════════════════════════
+       TOP BAR
+    ══════════════════════════════════════════ */
     .top-bar {
-      position:fixed; top:0; left:50%; transform:translateX(-50%);
-      width:100%; max-width:480px;
-      height:56px; padding:0 16px; padding-top:env(safe-area-inset-top,0px);
-      display:flex; align-items:center; gap:12px;
-      background: rgba(255,255,255,0.72);
+      position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      height: 56px; padding: 0 16px;
+      padding-top: env(safe-area-inset-top, 0px);
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.75);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border-bottom: .5px solid rgba(124,58,237,.1);
-      box-shadow: 0 .5px 0 rgba(124,58,237,.06);
-      z-index:200;
+      box-shadow: 0 1px 0 rgba(124,58,237,.06);
+      z-index: 200;
+      transition: background 300ms, border-color 300ms;
     }
-    .theme-dark .top-bar, .theme-midnight .top-bar {
-      background: rgba(8,8,26,.78);
-      border-bottom: .5px solid rgba(167,139,250,.1);
+    .theme-dark .top-bar,
+    .theme-midnight .top-bar {
+      background: rgba(8,8,26,.82);
+      border-bottom: .5px solid rgba(167,139,250,.12);
     }
-    .top-bar__left,.top-bar__right{ display:flex; align-items:center; gap:4px; flex:1; }
-    .top-bar__right{ justify-content:flex-end; }
-    .top-bar__center{ flex:2; text-align:center; }
-    .top-bar__title{ font-size:17px; font-weight:600; font-family:-apple-system,BlinkMacSystemFont,sans-serif; }
-    .aura-logo-sm{ font-size:22px; background:linear-gradient(135deg,#7c3aed,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .top-bar__left, .top-bar__right {
+      display: flex; align-items: center; gap: 4px; flex: 1;
+    }
+    .top-bar__right { justify-content: flex-end; }
+    .top-bar__center { flex: 2; text-align: center; }
+    .top-bar__title {
+      font-size: 17px; font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      transition: opacity 180ms;
+    }
+    .aura-logo-sm {
+      font-size: 22px;
+      background: linear-gradient(135deg,#7c3aed,#ec4899);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
 
-    /* ── MAIN ── */
-    .main-content{ flex:1; margin-top:56px; margin-bottom:72px; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+    /* ══════════════════════════════════════════
+       MAIN
+    ══════════════════════════════════════════ */
+    .main-content {
+      flex: 1;
+      margin-top: 56px;
+      margin-bottom: 72px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
 
-    /* ── BOTTOM NAV ── */
+    /* ══════════════════════════════════════════
+       BOTTOM NAV
+    ══════════════════════════════════════════ */
     .bottom-nav {
-      position:fixed; bottom:0; left:50%; transform:translateX(-50%);
-      width:100%; max-width:480px; height:72px;
-      padding-bottom:env(safe-area-inset-bottom,0px);
-      display:flex; align-items:center; justify-content:space-around;
-      background: rgba(255,255,255,0.78);
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      height: 72px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      display: flex; align-items: center; justify-content: space-around;
+      background: rgba(255,255,255,0.82);
       backdrop-filter: blur(32px) saturate(200%);
       -webkit-backdrop-filter: blur(32px) saturate(200%);
       border-top: .5px solid rgba(124,58,237,.08);
-      box-shadow: 0 -4px 24px rgba(124,58,237,.05);
-      z-index:200;
+      box-shadow: 0 -4px 24px rgba(124,58,237,.06);
+      z-index: 200;
+      transition: background 300ms;
     }
-    .theme-dark .bottom-nav, .theme-midnight .bottom-nav {
-      background: rgba(8,8,26,.82);
-      border-top: .5px solid rgba(167,139,250,.1);
+    .theme-dark .bottom-nav,
+    .theme-midnight .bottom-nav {
+      background: rgba(8,8,26,.86);
+      border-top: .5px solid rgba(167,139,250,.12);
     }
     .nav-item {
-      display:flex; flex-direction:column; align-items:center; gap:3px;
-      padding:8px 12px; border-radius:12px;
-      color:var(--color-text-muted);
-      transition: color 120ms, transform 120ms cubic-bezier(.34,1.56,.64,1);
-      position:relative; min-width:48px;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 8px 12px; border-radius: 14px;
+      color: var(--color-text-muted);
+      transition: color 150ms, transform 150ms cubic-bezier(.34,1.56,.64,1), background 150ms;
+      position: relative; min-width: 52px;
+      -webkit-tap-highlight-color: transparent;
     }
-    .nav-item svg{ width:22px; height:22px; }
-    .nav-item span{ font-size:10px; font-weight:500; }
-    .nav-item.active{ color:var(--color-primary); }
-    .nav-item.active svg{ transform:scale(1.15); }
-    .nav-item:active{ transform:scale(.88); }
+    .nav-item svg { width: 22px; height: 22px; }
+    .nav-item span { font-size: 10px; font-weight: 500; letter-spacing: .2px; }
+    .nav-item.active { color: var(--color-primary); }
+    .nav-item.active svg { transform: scale(1.15); }
+    .nav-item:active { transform: scale(.85); background: var(--color-bg-overlay); }
     /* Punto indicador activo */
     .nav-item.active::after {
-      content:''; position:absolute; bottom:-1px; left:50%; transform:translateX(-50%);
-      width:4px; height:4px; border-radius:50%;
-      background:var(--color-primary);
+      content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--color-primary);
       animation: dotPop .25s cubic-bezier(.34,1.56,.64,1);
     }
-    .nav-item--create{ color:transparent; }
+    .nav-item--create { color: transparent; }
     .create-btn {
-      width:50px; height:50px; border-radius:50%;
-      background:linear-gradient(135deg,#7c3aed,#ec4899);
-      display:flex; align-items:center; justify-content:center;
-      box-shadow:0 4px 16px rgba(124,58,237,.4), 0 0 0 0 rgba(124,58,237,.3);
-      color:white; transition:transform 120ms cubic-bezier(.34,1.56,.64,1), box-shadow 120ms;
+      width: 50px; height: 50px; border-radius: 50%;
+      background: linear-gradient(135deg,#7c3aed,#ec4899);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(124,58,237,.4), 0 0 0 0 rgba(124,58,237,.3);
+      color: white;
+      transition: transform 150ms cubic-bezier(.34,1.56,.64,1), box-shadow 150ms;
       animation: createPulse 3s ease-in-out infinite;
     }
-    .create-btn:active{ transform:scale(.88); box-shadow:0 2px 8px rgba(124,58,237,.3); }
-    .create-btn svg{ width:22px; height:22px; stroke:white; }
+    .create-btn:active { transform: scale(.86); box-shadow: 0 2px 8px rgba(124,58,237,.3); }
+    .create-btn svg { width: 22px; height: 22px; stroke: white; }
 
-    /* ── ICON BTN ── */
+    /* ══════════════════════════════════════════
+       ICON BTN
+    ══════════════════════════════════════════ */
     .icon-btn {
-      width:36px; height:36px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      color:var(--color-text-secondary);
-      transition: background 120ms, transform 120ms cubic-bezier(.34,1.56,.64,1);
-      position:relative;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-text-secondary);
+      transition: background 150ms, transform 150ms cubic-bezier(.34,1.56,.64,1);
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
     }
-    .icon-btn svg{ width:20px; height:20px; }
-    .icon-btn:active{ transform:scale(.88); background:var(--color-bg-overlay); }
+    .icon-btn svg { width: 20px; height: 20px; }
+    .icon-btn:active { transform: scale(.86); background: var(--color-bg-overlay); }
     .badge {
-      position:absolute; top:2px; right:2px;
-      min-width:16px; height:16px; border-radius:99px;
-      background:var(--color-accent); color:white;
-      font-size:10px; font-weight:700;
-      display:flex; align-items:center; justify-content:center;
-      padding:0 4px; border:2px solid var(--color-bg);
+      position: absolute; top: 2px; right: 2px;
+      min-width: 16px; height: 16px; border-radius: 99px;
+      background: var(--color-accent); color: white;
+      font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 4px;
+      border: 2px solid var(--color-bg);
+      animation: badgePop .3s cubic-bezier(.34,1.56,.64,1);
     }
 
-    /* ── MODALS ── */
-    .modals-container{ position:fixed; inset:0; z-index:300; pointer-events:none; }
+    /* ══════════════════════════════════════════
+       MODALES
+    ══════════════════════════════════════════ */
+    .modals-container {
+      position: fixed; inset: 0; z-index: 300; pointer-events: none;
+    }
     .modal-backdrop {
-      position:absolute; inset:0;
-      background:rgba(0,0,0,.45);
-      backdrop-filter: blur(16px) saturate(150%);
-      -webkit-backdrop-filter: blur(16px) saturate(150%);
-      pointer-events:all;
-      animation:fadeIn 200ms ease;
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.5);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      pointer-events: all;
+      animation: fadeIn 200ms ease;
     }
     .modal {
-      position:absolute; bottom:0; left:50%; transform:translateX(-50%);
-      width:100%; max-width:480px;
-      background: rgba(255,255,255,.94);
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: rgba(255,255,255,.96);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border-radius:28px 28px 0 0;
-      padding:24px 20px; padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));
-      pointer-events:all;
-      animation:slideUp 280ms cubic-bezier(.34,1.56,.64,1);
-      max-height:90dvh; overflow-y:auto;
-      border:1px solid rgba(124,58,237,.1);
-      box-shadow:0 -8px 40px rgba(124,58,237,.12);
+      border-radius: 28px 28px 0 0;
+      padding: 24px 20px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      pointer-events: all;
+      animation: slideUp 300ms cubic-bezier(.34,1.56,.64,1);
+      max-height: 92dvh; overflow-y: auto;
+      border: 1px solid rgba(124,58,237,.1);
+      box-shadow: 0 -8px 48px rgba(124,58,237,.14);
     }
-    .theme-dark .modal, .theme-midnight .modal {
-      background: rgba(12,12,30,.94);
-      border:1px solid rgba(167,139,250,.12);
+    .theme-dark .modal,
+    .theme-midnight .modal {
+      background: rgba(12,12,30,.96);
+      border: 1px solid rgba(167,139,250,.14);
     }
-    .modal__handle{ width:36px; height:4px; border-radius:99px; background:var(--color-border-strong); margin:0 auto 20px; }
-    .modal__title{ font-size:18px; font-weight:700; margin-bottom:16px; text-align:center; font-family:-apple-system,BlinkMacSystemFont,sans-serif; }
+    .modal__handle {
+      width: 36px; height: 4px; border-radius: 99px;
+      background: var(--color-border-strong);
+      margin: 0 auto 20px;
+    }
+    .modal__title {
+      font-size: 18px; font-weight: 700;
+      margin-bottom: 16px; text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-    /* ── TOASTS ── */
-    .toasts-container{
-      position:fixed; top:calc(56px + 12px); left:50%; transform:translateX(-50%);
-      width:calc(100% - 32px); max-width:448px;
-      display:flex; flex-direction:column; gap:8px;
-      z-index:400; pointer-events:none;
+    /* ══════════════════════════════════════════
+       TOASTS
+    ══════════════════════════════════════════ */
+    .toasts-container {
+      position: fixed;
+      top: calc(56px + env(safe-area-inset-top, 0px) + 12px);
+      left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 448px;
+      display: flex; flex-direction: column; gap: 8px;
+      z-index: 400; pointer-events: none;
     }
     .toast {
-      background:rgba(26,26,46,.92); color:white;
-      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-      padding:12px 16px; border-radius:14px;
-      font-size:14px; font-weight:500;
-      box-shadow:0 8px 32px rgba(0,0,0,.2);
-      animation:toastIn 280ms cubic-bezier(.34,1.56,.64,1);
-      pointer-events:all;
-      display:flex; align-items:center; gap:10px;
-      border:1px solid rgba(255,255,255,.08);
+      background: rgba(18,18,40,.94); color: white;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      padding: 12px 16px; border-radius: 16px;
+      font-size: 14px; font-weight: 500;
+      box-shadow: 0 8px 32px rgba(0,0,0,.25);
+      animation: toastIn 300ms cubic-bezier(.34,1.56,.64,1);
+      pointer-events: all;
+      display: flex; align-items: center; gap: 10px;
+      border: 1px solid rgba(255,255,255,.1);
     }
-    .toast--success{ background:rgba(16,185,129,.9); }
-    .toast--error  { background:rgba(239,68,68,.9); }
-    .toast--warning{ background:rgba(245,158,11,.9); color:#1a1a2e; }
-    .toast.removing{ animation:toastOut 200ms ease forwards; }
+    .toast--success { background: rgba(16,185,129,.92); }
+    .toast--error   { background: rgba(239,68,68,.92); }
+    .toast--warning { background: rgba(245,158,11,.92); color: #1a1a2e; }
+    .toast.removing { animation: toastOut 200ms ease forwards; }
 
-    /* ── AI BUTTON ── */
+    /* ══════════════════════════════════════════
+       BOTÓN IA
+    ══════════════════════════════════════════ */
     .aura-ai {
-      position:fixed;
-      bottom:calc(72px + 16px);
-      right:16px;
-      z-index:500;
-      touch-action:none;
-      user-select:none;
+      position: fixed;
+      bottom: calc(72px + 18px);
+      right: 16px;
+      z-index: 500;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
     .aura-ai__orb {
-      width:52px; height:52px; border-radius:50%;
-      background:radial-gradient(circle at 35% 35%, #c4b5fd, #7c3aed, #4c1d95);
-      box-shadow:0 0 0 0 rgba(124,58,237,.5), 0 6px 24px rgba(124,58,237,.5);
-      display:flex; align-items:center; justify-content:center;
-      color:white;
-      animation:aiPulse 2.8s ease-in-out infinite;
-      transition:transform 150ms cubic-bezier(.34,1.56,.64,1);
+      width: 52px; height: 52px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #c4b5fd, #7c3aed, #4c1d95);
+      box-shadow: 0 0 0 0 rgba(124,58,237,.5), 0 6px 24px rgba(124,58,237,.5);
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      animation: aiPulse 2.8s ease-in-out infinite;
+      transition: transform 150ms cubic-bezier(.34,1.56,.64,1);
     }
-    .aura-ai__orb svg{ width:24px; height:24px; stroke:white; pointer-events:none; }
-    .aura-ai__orb:active{ transform:scale(.88); }
-    /* Ondas de escucha */
+    .aura-ai__orb svg { width: 24px; height: 24px; stroke: white; pointer-events: none; }
+    .aura-ai__orb:active { transform: scale(.86); }
     .aura-ai.listening .aura-ai__orb {
-      background:radial-gradient(circle at 35% 35%, #f9a8d4, #ec4899, #9d174d);
-      box-shadow:0 0 0 0 rgba(236,72,153,.6), 0 6px 24px rgba(236,72,153,.5);
-      animation:listenPulse 1s ease-in-out infinite;
+      background: radial-gradient(circle at 35% 35%, #f9a8d4, #ec4899, #9d174d);
+      box-shadow: 0 0 0 0 rgba(236,72,153,.6), 0 6px 24px rgba(236,72,153,.5);
+      animation: listenPulse 1s ease-in-out infinite;
     }
     .aura-ai__wave {
-      position:absolute; inset:-6px; border-radius:50%;
-      border:2px solid rgba(124,58,237,.4);
-      animation:waveOut 1.5s ease-out infinite;
-      display:none;
+      position: absolute; inset: -6px; border-radius: 50%;
+      border: 2px solid rgba(124,58,237,.4);
+      animation: waveOut 1.5s ease-out infinite;
+      display: none;
     }
-    .aura-ai__wave:nth-child(2){ animation-delay:.5s; }
-    .aura-ai.listening .aura-ai__wave{ display:block; }
+    .aura-ai__wave:nth-child(2) { animation-delay: .5s; }
+    .aura-ai.listening .aura-ai__wave { display: block; }
 
-    /* ── ECOS VIDEO (Gyro scroll) ── */
+    /* ══════════════════════════════════════════
+       ECOS — video scroll
+    ══════════════════════════════════════════ */
     .eco-video-container {
-      height:calc(100dvh - 56px - 72px);
-      overflow:hidden;
-      position:relative;
+      height: calc(100dvh - 56px - 72px);
+      overflow: hidden; position: relative;
     }
     .eco-video-track {
-      display:flex; flex-direction:column;
-      transition:transform 600ms cubic-bezier(.4,0,.2,1);
-      will-change:transform;
+      display: flex; flex-direction: column;
+      transition: transform 600ms cubic-bezier(.4,0,.2,1);
+      will-change: transform;
     }
     .eco-video-item {
-      height:calc(100dvh - 56px - 72px);
-      flex-shrink:0;
-      position:relative;
-      background:#000;
+      height: calc(100dvh - 56px - 72px);
+      flex-shrink: 0; position: relative; background: #000;
     }
-    .eco-video-item video{ width:100%; height:100%; object-fit:cover; }
+    .eco-video-item video { width: 100%; height: 100%; object-fit: cover; }
     .eco-video-overlay {
-      position:absolute; inset:0;
-      background:linear-gradient(to top, rgba(0,0,0,.75) 0%, transparent 55%);
-      display:flex; flex-direction:column; justify-content:flex-end;
-      padding:20px;
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.8) 0%, transparent 55%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 20px;
     }
     .eco-video-actions {
-      position:absolute; right:16px; bottom:28%;
-      display:flex; flex-direction:column; gap:20px; align-items:center;
+      position: absolute; right: 16px; bottom: 28%;
+      display: flex; flex-direction: column; gap: 20px; align-items: center;
     }
     .eco-video-action {
-      display:flex; flex-direction:column; align-items:center; gap:4px;
-      color:white; cursor:pointer;
-      transition:transform 120ms cubic-bezier(.34,1.56,.64,1);
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      color: white; cursor: pointer;
+      transition: transform 120ms cubic-bezier(.34,1.56,.64,1);
     }
-    .eco-video-action:active{ transform:scale(.85); }
-    .eco-video-action svg{ width:28px; height:28px; stroke:white; filter:drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
-    .eco-video-action span{ font-size:12px; font-weight:600; text-shadow:0 1px 3px rgba(0,0,0,.5); }
+    .eco-video-action:active { transform: scale(.84); }
+    .eco-video-action svg { width: 28px; height: 28px; stroke: white; filter: drop-shadow(0 1px 4px rgba(0,0,0,.6)); }
+    .eco-video-action span { font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
 
-    /* ── KEYFRAMES ── */
-    @keyframes bgDrift{ 0%{transform:rotate(0) scale(1)} 100%{transform:rotate(12deg) scale(1.08)} }
-    @keyframes ringOut{ 0%{transform:scale(1);opacity:.6} 100%{transform:scale(3);opacity:0} }
-    @keyframes orbBreath{ 0%,100%{box-shadow:0 0 40px rgba(124,58,237,.6),0 0 80px rgba(124,58,237,.2)} 50%{box-shadow:0 0 60px rgba(124,58,237,.8),0 0 120px rgba(124,58,237,.3)} }
-    @keyframes wordPop{ from{opacity:0;transform:translateY(14px) scale(.95)} to{opacity:1;transform:none} }
-    @keyframes barFill{ 0%{width:0} 60%{width:75%} 100%{width:100%} }
-    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
-    @keyframes slideUp{ from{transform:translateX(-50%) translateY(100%)} to{transform:translateX(-50%) translateY(0)} }
-    @keyframes toastIn{ from{opacity:0;transform:translateY(-16px) scale(.92)} to{opacity:1;transform:none} }
-    @keyframes toastOut{ from{opacity:1;transform:none} to{opacity:0;transform:translateY(-16px) scale(.92)} }
-    @keyframes dotPop{ from{transform:translateX(-50%) scale(0)} to{transform:translateX(-50%) scale(1)} }
-    @keyframes createPulse{ 0%,100%{box-shadow:0 4px 16px rgba(124,58,237,.4),0 0 0 0 rgba(124,58,237,.2)} 50%{box-shadow:0 6px 24px rgba(124,58,237,.5),0 0 0 8px rgba(124,58,237,0)} }
-    @keyframes aiPulse{ 0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,.5),0 6px 24px rgba(124,58,237,.5);transform:translateY(0)} 50%{box-shadow:0 0 0 12px rgba(124,58,237,0),0 10px 32px rgba(124,58,237,.6);transform:translateY(-5px)} }
-    @keyframes listenPulse{ 0%,100%{box-shadow:0 0 0 0 rgba(236,72,153,.7),0 6px 24px rgba(236,72,153,.5)} 50%{box-shadow:0 0 0 14px rgba(236,72,153,0),0 10px 32px rgba(236,72,153,.7)} }
-    @keyframes waveOut{ 0%{transform:scale(1);opacity:.5} 100%{transform:scale(2.2);opacity:0} }
-    @keyframes pageEnter{ from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-    .page{ animation:pageEnter 180ms ease; }
-    .hidden{ display:none!important; }
+    /* ══════════════════════════════════════════
+       LOADING STATE
+    ══════════════════════════════════════════ */
+    .skeleton {
+      background: linear-gradient(90deg, var(--color-bg-secondary) 25%, var(--color-bg-input) 50%, var(--color-bg-secondary) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease infinite;
+      border-radius: 10px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ══════════════════════════════════════════
+       KEYFRAMES
+    ══════════════════════════════════════════ */
+    @keyframes bgDrift      { 0%{transform:rotate(0) scale(1)} 100%{transform:rotate(12deg) scale(1.08)} }
+    @keyframes ringOut      { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(3);opacity:0} }
+    @keyframes orbBreath    { 0%,100%{box-shadow:0 0 40px rgba(124,58,237,.6),0 0 80px rgba(124,58,237,.2)} 50%{box-shadow:0 0 60px rgba(124,58,237,.8),0 0 120px rgba(124,58,237,.3)} }
+    @keyframes wordPop      { from{opacity:0;transform:translateY(14px) scale(.95)} to{opacity:1;transform:none} }
+    @keyframes barFill      { 0%{width:0} 60%{width:75%} 100%{width:100%} }
+    @keyframes fadeIn       { from{opacity:0} to{opacity:1} }
+    @keyframes slideUp      { from{transform:translateX(-50%) translateY(100%)} to{transform:translateX(-50%) translateY(0)} }
+    @keyframes toastIn      { from{opacity:0;transform:translateY(-16px) scale(.92)} to{opacity:1;transform:none} }
+    @keyframes toastOut     { from{opacity:1;transform:none} to{opacity:0;transform:translateY(-16px) scale(.92)} }
+    @keyframes dotPop       { from{transform:translateX(-50%) scale(0)} to{transform:translateX(-50%) scale(1)} }
+    @keyframes badgePop     { from{transform:scale(0)} to{transform:scale(1)} }
+    @keyframes createPulse  { 0%,100%{box-shadow:0 4px 16px rgba(124,58,237,.4),0 0 0 0 rgba(124,58,237,.2)} 50%{box-shadow:0 6px 24px rgba(124,58,237,.5),0 0 0 8px rgba(124,58,237,0)} }
+    @keyframes aiPulse      { 0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,.5),0 6px 24px rgba(124,58,237,.5);transform:translateY(0)} 50%{box-shadow:0 0 0 12px rgba(124,58,237,0),0 10px 32px rgba(124,58,237,.6);transform:translateY(-5px)} }
+    @keyframes listenPulse  { 0%,100%{box-shadow:0 0 0 0 rgba(236,72,153,.7),0 6px 24px rgba(236,72,153,.5)} 50%{box-shadow:0 0 0 14px rgba(236,72,153,0),0 10px 32px rgba(236,72,153,.7)} }
+    @keyframes waveOut      { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(2.2);opacity:0} }
+    @keyframes pageEnter    { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+    .page  { animation: pageEnter 200ms ease; }
+    .hidden { display: none !important; }
   </style>
 </head>
+
 <body class="theme-default" data-page="splash">
 
-  <!-- SPLASH -->
-  <div id="splash-screen" class="splash">
+  <!-- ══════════════════════════════════════════
+       SPLASH
+  ══════════════════════════════════════════ -->
+  <div id="splash-screen" class="splash" role="status" aria-label="Cargando Aura">
     <div class="splash__bg"></div>
     <div class="splash__orb-wrap">
       <div class="splash__ring"></div>
       <div class="splash__ring"></div>
       <div class="splash__ring"></div>
-      <div class="splash__orb">✦</div>
+      <div class="splash__orb" aria-hidden="true">✦</div>
     </div>
     <div class="splash__word">Aura</div>
     <div class="splash__tag">Tu espacio · Tu aura</div>
-    <div class="splash__bar-wrap"><div class="splash__bar"></div></div>
+    <div class="splash__bar-wrap">
+      <div class="splash__bar"></div>
+    </div>
+    <div class="splash__version">v2.0</div>
   </div>
 
-  <!-- APP -->
-  <div id="app" class="app hidden">
+  <!-- ══════════════════════════════════════════
+       APP
+  ══════════════════════════════════════════ -->
+  <div id="app" class="app hidden" role="main">
 
     <!-- TOP BAR -->
-    <header id="top-bar" class="top-bar">
+    <header id="top-bar" class="top-bar" role="banner">
       <div class="top-bar__left">
-        <button class="icon-btn" id="btn-logo">
-          <span class="aura-logo-sm">✦</span>
+        <button class="icon-btn" id="btn-logo" aria-label="Inicio Aura">
+          <span class="aura-logo-sm" aria-hidden="true">✦</span>
         </button>
       </div>
       <div class="top-bar__center">
@@ -348,79 +448,137 @@
       </div>
       <div class="top-bar__right">
         <button class="icon-btn" id="btn-search" aria-label="Buscar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
         </button>
         <button class="icon-btn" id="btn-notifications" aria-label="Notificaciones">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="badge" id="notif-badge">3</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="badge" id="notif-badge" aria-label="3 notificaciones">3</span>
         </button>
       </div>
     </header>
 
-    <!-- CONTENIDO -->
-    <main id="main-content" class="main-content"></main>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main id="main-content" class="main-content" aria-live="polite"></main>
 
     <!-- BOTTOM NAV -->
-    <nav id="bottom-nav" class="bottom-nav">
-      <button class="nav-item active" data-page="home" aria-label="Inicio">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <nav id="bottom-nav" class="bottom-nav" role="navigation" aria-label="Navegación principal">
+      <button class="nav-item active" data-page="home" aria-label="Inicio" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
         <span>Inicio</span>
       </button>
+
       <button class="nav-item" data-page="ecos" aria-label="Ecos">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="23 7 16 12 23 17 23 7"/>
+          <rect x="1" y="5" width="15" height="14" rx="2"/>
+        </svg>
         <span>Ecos</span>
       </button>
-      <button class="nav-item nav-item--create" data-action="create" aria-label="Crear">
-        <div class="create-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+
+      <button class="nav-item nav-item--create" data-action="create" aria-label="Crear publicación">
+        <div class="create-btn" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
         </div>
       </button>
-      <button class="nav-item" data-page="communities" aria-label="Red">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+
+      <button class="nav-item" data-page="communities" aria-label="Mi Red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
         <span>Red</span>
       </button>
-      <button class="nav-item" data-page="profile" aria-label="Perfil">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+
+      <button class="nav-item" data-page="profile" aria-label="Mi Perfil">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
         <span>Perfil</span>
       </button>
     </nav>
 
     <!-- BOTÓN IA -->
-    <div id="aura-ai-btn" class="aura-ai" title="Asistente Aura IA">
-      <div class="aura-ai__wave"></div>
-      <div class="aura-ai__wave"></div>
-      <div class="aura-ai__orb" id="ai-orb">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    <div id="aura-ai-btn" class="aura-ai" role="button"
+         title="Asistente Aura IA"
+         aria-label="Asistente de voz Aura"
+         tabindex="0">
+      <div class="aura-ai__wave" aria-hidden="true"></div>
+      <div class="aura-ai__wave" aria-hidden="true"></div>
+      <div class="aura-ai__orb" id="ai-orb" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
       </div>
     </div>
 
     <!-- MODALES -->
-    <div id="modals" class="modals-container"></div>
-    <!-- TOASTS -->
-    <div id="toasts" class="toasts-container" aria-live="polite"></div>
-  </div>
+    <div id="modals" class="modals-container" aria-modal="true"></div>
 
-  <!-- SCRIPTS -->
+    <!-- TOASTS -->
+    <div id="toasts" class="toasts-container" aria-live="polite" aria-atomic="false"></div>
+
+  </div><!-- /app -->
+
+  <!-- ══════════════════════════════════════════
+       SCRIPTS — orden correcto:
+       1. Base (config, store, theme)
+       2. UI (toast, modal, router)
+       3. Datos / Auth
+       4. Módulos de página
+       5. Extras (gyro, attention)
+       6. IA y app al final ← clave del fix
+  ══════════════════════════════════════════ -->
+
+  <!-- BASE -->
   <script src="js/modules/config.js"></script>
   <script src="js/modules/store.js"></script>
   <script src="js/modules/theme.js"></script>
-  <script src="js/modules/router.js"></script>
+
+  <!-- UI -->
   <script src="js/modules/toast.js"></script>
   <script src="js/modules/modal.js"></script>
-  <script src="js/modules/ai-assistant.js"></script>
-  <script src="js/modules/attention.js"></script>
-  <script src="js/modules/gyroscope.js"></script>
+  <script src="js/modules/router.js"></script>
+
+  <!-- AUTH primero — todo depende del usuario -->
   <script src="js/modules/auth.js"></script>
+
+  <!-- MÓDULOS DE PÁGINA -->
   <script src="js/modules/feed.js"></script>
   <script src="js/modules/ecos.js"></script>
   <script src="js/modules/chat.js"></script>
   <script src="js/modules/communities.js"></script>
   <script src="js/modules/profile.js"></script>
   <script src="js/modules/karma.js"></script>
-<script src="js/modules/notifications.js"></script>
-<script src="js/modules/media.js"></script>
-<script src="js/modules/search.js"></script>
-<script src="js/modules/create-eco.js"></script>
+  <script src="js/modules/notifications.js"></script>
+  <script src="js/modules/media.js"></script>
+  <script src="js/modules/search.js"></script>
+  <script src="js/modules/create-eco.js"></script>
+
+  <!-- EXTRAS visuales -->
+  <script src="js/modules/gyroscope.js"></script>
+  <script src="js/modules/attention.js"></script>
+
+  <!-- IA y app AL FINAL — cuando todo ya existe en window -->
+  <script src="js/modules/ai-assistant.js"></script>
   <script src="js/app.js"></script>
+
 </body>
 </html>
