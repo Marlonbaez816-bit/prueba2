@@ -1,0 +1,20 @@
+/* ══════════════════════════════════════
+   PREVISUALIZACIÓN LARGA PRESIÓN (iOS style)
+══════════════════════════════════════ */
+.peek-preview {
+  position:fixed; z-index:800;
+  background:var(--color-bg-card);
+  border-radius:20px; overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.1);
+  animation:peekIn .25s cubic-bezier(.34,1.56,.64,1);
+  max-width:280px; min-width:200px;
+  pointer-events:none;
+}
+.peek-preview img, .peek-preview video {
+  width:100%; display:block; max-height:300px; object-fit:cover;
+}
+.peek-preview__body { padding:12px; }
+.peek-preview__title { font-size:14px; font-weight:600; }
+.peek-preview__sub { font-size:12px; color:var(--color-text-muted); margin-top:2px; }
+
+@keyframes peekIn { from{opacity:0;transform:scale(.88)} to{opacity:1;transform:scale(1)} }
