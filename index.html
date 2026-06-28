@@ -10,19 +10,16 @@
   <meta name="description" content="Aura — Tu espacio. Tu aura." />
   <meta name="mobile-web-app-capable" content="yes" />
 
-  <!-- PWA / Iconos -->
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
 
-  <!-- Open Graph -->
   <meta property="og:title" content="Aura" />
   <meta property="og:description" content="Tu espacio. Tu aura." />
   <meta property="og:type" content="website" />
 
   <title>Aura ✦</title>
 
-  <!-- CSS Módulos -->
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/reset.css" />
   <link rel="stylesheet" href="css/typography.css" />
@@ -35,7 +32,6 @@
   <link rel="stylesheet" href="css/pwa.css" />
   <link rel="stylesheet" href="css/peek.css" />
 
-  <!-- Face API -->
   <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 <body class="theme-default">
@@ -58,7 +54,6 @@
   <!-- APP -->
   <div id="app" class="app hidden">
 
-    <!-- TOP BAR -->
     <header id="top-bar" class="top-bar">
       <div class="top-bar__left">
         <button class="icon-btn" id="btn-logo" aria-label="Inicio">
@@ -90,10 +85,8 @@
       </div>
     </header>
 
-    <!-- CONTENIDO -->
     <main id="main-content" class="main-content"></main>
 
-    <!-- BOTTOM NAV -->
     <nav id="bottom-nav" class="bottom-nav">
       <button class="nav-item active" data-page="home" aria-label="Inicio">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -135,7 +128,6 @@
       </button>
     </nav>
 
-    <!-- BOTÓN IA -->
     <div id="aura-ai-btn" class="aura-ai" title="Asistente Aura IA">
       <div class="aura-ai__wave"></div>
       <div class="aura-ai__wave"></div>
@@ -149,13 +141,9 @@
       </div>
     </div>
 
-    <!-- MODALES -->
     <div id="modals" class="modals-container"></div>
-
-    <!-- TOASTS -->
     <div id="toasts" class="toasts-container" aria-live="polite"></div>
 
-    <!-- BANNER PWA -->
     <div id="install-banner" class="install-banner hidden">
       <div class="install-banner__icon">✦</div>
       <div class="install-banner__text">
@@ -168,7 +156,6 @@
 
   </div>
 
-  <!-- SVG FAVICON -->
   <svg id="favicon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="display:none">
     <defs>
       <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -180,18 +167,30 @@
     <text x="16" y="22" text-anchor="middle" font-size="18" fill="white" font-family="Arial">✦</text>
   </svg>
 
-  <!-- SCRIPTS -->
-<script src="js/modules/supabase.js"></script>
-<script src="js/modules/auth.js"></script>
+  <!-- SCRIPTS — EL ORDEN ES CRÍTICO -->
+
+  <!-- 1. BASE: config, store, tema, router, ui -->
   <script src="js/modules/config.js"></script>
   <script src="js/modules/store.js"></script>
   <script src="js/modules/theme.js"></script>
   <script src="js/modules/router.js"></script>
   <script src="js/modules/toast.js"></script>
   <script src="js/modules/modal.js"></script>
+
+  <!-- 2. SUPABASE + AUTH (después de toast y modal) -->
+  <script src="js/modules/supabase.js"></script>
+  <script src="js/modules/auth.js"></script>
+
+  <!-- 3. HARDWARE / UX -->
   <script src="js/modules/gyroscope.js"></script>
   <script src="js/modules/attention.js"></script>
   <script src="js/modules/ai-assistant.js"></script>
+  <script src="js/modules/splash.js"></script>
+  <script src="js/modules/pwa.js"></script>
+  <script src="js/modules/peek.js"></script>
+  <script src="js/modules/camera.js"></script>
+
+  <!-- 4. PÁGINAS -->
   <script src="js/modules/feed.js"></script>
   <script src="js/modules/ecos.js"></script>
   <script src="js/modules/chat.js"></script>
@@ -202,11 +201,9 @@
   <script src="js/modules/media.js"></script>
   <script src="js/modules/search.js"></script>
   <script src="js/modules/create-eco.js"></script>
-  <script src="js/modules/camera.js"></script>
-  <script src="js/modules/splash.js"></script>
-  <script src="js/modules/pwa.js"></script>
-  <script src="js/modules/peek.js"></script>
-<script src="js/modules/user-profile.js"></script>
+  <script src="js/modules/user-profile.js"></script>
+
+  <!-- 5. APP (último) -->
   <script src="js/app.js"></script>
 
 </body>
