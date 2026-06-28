@@ -1,7 +1,7 @@
 /* ============================================
-   AURA — ai-assistant.js v4
-   FIX: AuraStore.load() se llama DENTRO de init()
-   no al momento de parsear el script.
+   AURA — ai-assistant.js v5
+   FIX: initialized guard evita re-init en
+   cada cambio de pantalla.
    ============================================ */
 
 window.AuraAI = (() => {
@@ -12,8 +12,8 @@ window.AuraAI = (() => {
   let isInDragMode = false;
   let recognition  = null;
   let isListening  = false;
+  let initialized  = false;  // ← FIX: guardia de inicialización única
 
-  // ⚠️ NO llamar AuraStore aquí arriba — se inicializan en init()
   let isEnabled    = true;
   let responseMode = 'both';
 
@@ -434,13 +434,15 @@ window.AuraAI = (() => {
   }
 
   // ══════════════════════════════════════════
-  //  INIT — AuraStore se lee AQUÍ, no arriba
+  //  INIT — solo se ejecuta UNA VEZ
   // ══════════════════════════════════════════
   function init() {
+    if (initialized) return;  // ← FIX: bloquea re-inicialización
+    initialized = true;
+
     btn = document.getElementById('aura-ai-btn');
     if (!btn) return;
 
-    // Leer preferencias DENTRO de init(), cuando AuraStore ya existe
     isEnabled    = AuraStore.load('ai_enabled', true);
     responseMode = AuraStore.load('ai_response_mode', 'both');
 
