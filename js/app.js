@@ -83,7 +83,10 @@
     document.getElementById('btn-logo')?.addEventListener('click', () => {
       AuraRouter.navigate('home');
     });
-
+// ── BOTÓN CÁMARA ──
+document.getElementById('btn-camera')?.addEventListener('click', () => {
+  AuraCamera.open();
+});
     // ── 9. PÁGINA INICIAL ──
     AuraRouter.navigate('home');
 
