@@ -538,4 +538,37 @@ window.AuraCamera = (() => {
 
   // ── OPEN / CLOSE ──
   function open() {
-    if (document.getElementById('camera-page'))
+    if (document.getElementById('camera-page'))return;
+    render();
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    if (isRecording) _stopRecording();
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = null;
+    document.getElementById('camera-page')?.remove();
+    document.body.style.overflow = '';
+  }
+
+  return {
+    init: () => {
+      document.getElementById('btn-camera')?.addEventListener('click', open);
+    },
+    open,
+    close,
+    _flip,
+    _setFilter,
+    _toggleGrid,
+    _toggleLevel,
+    _shoot,
+    _cycleTimer,
+    _setMode,
+    _discardPhoto,
+    _downloadPhoto,
+    _postPhoto,
+    _confirmPost,
+    _downloadVideo,
+    _postVideo,
+  };
+})();
